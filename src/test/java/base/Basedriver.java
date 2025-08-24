@@ -9,7 +9,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Basedriver {
-	WebDriver driver;
+	public WebDriver driver;
 	
 	public Basedriver(WebDriver driver) {
 		this.driver = driver;
@@ -30,5 +30,9 @@ public class Basedriver {
 		wait_until_element_is_visible(locator);
 		WebElement element = driver.findElement(locator);
 		element.sendKeys(input_text);
+	}
+	
+	public String get_url() {
+		return driver.getCurrentUrl();
 	}
 }
