@@ -24,4 +24,13 @@ public class LoginPage extends Basedriver {
 		}
 		return false;
 	}
+
+	public boolean invalid_credentials_error_isVisible() {
+		try {
+			wait_until_element_is_visible(LoginPageLocators.INVALID_CREDENTIALS_ERROR);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
 }
