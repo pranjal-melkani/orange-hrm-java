@@ -12,7 +12,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import utils.ReadConfig;
 
 public class Basetest {
-	WebDriver driver;
+	public WebDriver driver;
 
 	@BeforeMethod
 	public void setup() throws IOException {
