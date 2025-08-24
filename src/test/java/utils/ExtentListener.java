@@ -70,8 +70,22 @@ public class ExtentListener implements ITestListener {
 			test = report.createTest("Valid Login");
 			test.addScreenCaptureFromPath(screenshot_path);
 			test.generateLog(Status.PASS, MarkupHelper.createLabel("User logged in successfully", ExtentColor.GREEN));
+		} else if (result.getName().equalsIgnoreCase("valid_username_invalid_password")) {
+			test = report.createTest("Invalid Login - Wrong password");
+			test.addScreenCaptureFromPath(screenshot_path);
+			test.generateLog(Status.PASS,
+					MarkupHelper.createLabel("Invalid login credentials error is visible", ExtentColor.GREEN));
+		} else if (result.getName().equalsIgnoreCase("invalid_username_valid_password")) {
+			test = report.createTest("Invalid Login - Wrong username");
+			test.addScreenCaptureFromPath(screenshot_path);
+			test.generateLog(Status.PASS,
+					MarkupHelper.createLabel("Invalid login credentials error is visible", ExtentColor.GREEN));
+		} else if (result.getName().equalsIgnoreCase("invalid_username_invalid_password")) {
+			test = report.createTest("Invalid Login - Wrong username & password");
+			test.addScreenCaptureFromPath(screenshot_path);
+			test.generateLog(Status.PASS,
+					MarkupHelper.createLabel("Invalid login credentials error is visible", ExtentColor.GREEN));
 		}
-
 	}
 
 	@Override
@@ -83,18 +97,24 @@ public class ExtentListener implements ITestListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		String screenshot_path = System.getProperty("user.dir") + "\\src\\test\\resources\\screenshots\\"
 				+ result.getName() + ".png";
 		Throwable t = result.getThrowable();
-		
+
 		if (result.getName().equalsIgnoreCase("valid_username_valid_password")) {
 			test = report.createTest("Valid Login");
+		} else if (result.getName().equalsIgnoreCase("valid_username_invalid_password")) {
+			test = report.createTest("Invalid Login - Wrong password");
+		} else if (result.getName().equalsIgnoreCase("invalid_username_valid_password")) {
+			test = report.createTest("Invalid Login - Wrong username");
+		} else if (result.getName().equalsIgnoreCase("invalid_username_invalid_password")) {
+			test = report.createTest("Invalid Login - Wrong username & password");
 		}
-		
+
 		test.addScreenCaptureFromPath(screenshot_path);
 		test.generateLog(Status.FAIL, MarkupHelper.createLabel(t.getMessage(), ExtentColor.RED));
-		
+
 	}
 
 	@Override
