@@ -1,8 +1,10 @@
 package utils;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
@@ -10,6 +12,9 @@ import org.testng.ITestResult;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
+
+import base.Basetest;
+
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.markuputils.ExtentColor;
@@ -19,6 +24,7 @@ public class ExtentListener implements ITestListener {
 	ExtentSparkReporter htmlreporter;
 	ExtentReports report;
 	ExtentTest test;
+	WebDriver driver;
 
 	public void config_report() {
 		String timestamp = new SimpleDateFormat("dd-MM-yy hh-mm-ss").format(new Date());
@@ -49,14 +55,46 @@ public class ExtentListener implements ITestListener {
 
 	@Override
 	public void onTestSuccess(ITestResult result) {
-		test = report.createTest(result.getName());
-		test.generateLog(Status.PASS, MarkupHelper.createLabel("Test Passed", ExtentColor.GREEN));
+		driver = ((Basetest) result.getInstance()).driver;
+		Utilities ut = new Utilities(driver);
+		try {
+			ut.capture_screenshot(result.getName());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		String screenshot_path = System.getProperty("user.dir") + "\\src\\test\\resources\\screenshots\\"
+				+ result.getName() + ".png";
+
+		if (result.getName().equalsIgnoreCase("valid_username_valid_password")) {
+			test = report.createTest("Valid Login");
+			test.addScreenCaptureFromPath(screenshot_path);
+			test.generateLog(Status.PASS, MarkupHelper.createLabel("User logged in successfully", ExtentColor.GREEN));
+		}
+
 	}
 
 	@Override
 	public void onTestFailure(ITestResult result) {
-		test = report.createTest(result.getName());
-		test.generateLog(Status.FAIL, MarkupHelper.createLabel("Test Failed", ExtentColor.RED));
+		driver = ((Basetest) result.getInstance()).driver;
+		Utilities ut = new Utilities(driver);
+		try {
+			ut.capture_screenshot(result.getName());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		String screenshot_path = System.getProperty("user.dir") + "\\src\\test\\resources\\screenshots\\"
+				+ result.getName() + ".png";
+		Throwable t = result.getThrowable();
+		
+		if (result.getName().equalsIgnoreCase("valid_username_valid_password")) {
+			test = report.createTest("Valid Login");
+		}
+		
+		test.addScreenCaptureFromPath(screenshot_path);
+		test.generateLog(Status.FAIL, MarkupHelper.createLabel(t.getMessage(), ExtentColor.RED));
+		
 	}
 
 	@Override
